@@ -16,14 +16,18 @@ import java.util.UUID;
 @Service
 public class AssignmentService {
 
-    @Autowired
-    private AssignmentRepository assignmentRepository;
+    private final AssignmentRepository assignmentRepository;
+    private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public AssignmentService(AssignmentRepository assignmentRepository,
+                             TaskRepository taskRepository,
+                             UserRepository userRepository) {
+        this.assignmentRepository = assignmentRepository;
+        this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }
 
     // 🔹 Use Case: Assign a user to a task
     public Assignment assignUserToTask(UUID taskId, UUID userId) {
@@ -32,10 +36,20 @@ public class AssignmentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // ❗ Check if task is already assigned
+        if (task.getAssignment() != null) {
+            // Avoid 500 error — just return existing assignment
+            return task.getAssignment();
+        }
+
+        // ✅ Create new assignment
         Assignment assignment = new Assignment();
         assignment.setTask(task);
         assignment.setUser(user);
         assignment.setAssignedAt(Instant.now());
+
+        // Bi-directional mapping (optional but safer)
+        task.setAssignment(assignment);
 
         return assignmentRepository.save(assignment);
     }
