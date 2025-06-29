@@ -3,6 +3,8 @@ package com.workhub.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "users") // optional if table is named differently
@@ -26,6 +28,7 @@ public class User {
 
     // A user can own multiple boards
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonIgnore // Prevent infinite recursion when serializing Board → User → Boards...
     private List<Board> boards = new ArrayList<>();
 
     // A user can collaborate on many boards
