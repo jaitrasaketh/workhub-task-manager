@@ -4,14 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 
 
 @Entity
-@Table(name = "users") // optional if table is named differently
-@Data                   // Generates getters/setters/toString
+@Table(name = "users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
