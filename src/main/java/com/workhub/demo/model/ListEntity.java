@@ -2,8 +2,11 @@ package com.workhub.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
 
 @Entity
 @Table(name = "lists")
@@ -25,9 +28,11 @@ public class ListEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
+    @JsonBackReference
     private Board board;
 
-    // One list can contain many tasks
+
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Optional, unless you need tasks returned with list
     private List<Task> tasks = new ArrayList<>();
 }
