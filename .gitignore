@@ -33,3 +33,7 @@ llm-service/venv/
 
 # Logs
 *.log
+
+# React Frontend
+/workhub-frontend/node_modules
+/workhub-frontend/build
