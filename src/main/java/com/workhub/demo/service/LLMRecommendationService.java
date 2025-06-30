@@ -1,5 +1,6 @@
 package com.workhub.demo.service;
 
+import com.workhub.demo.client.LLMClient;
 import com.workhub.demo.model.LLMRecommendation;
 import com.workhub.demo.model.Task;
 import com.workhub.demo.repository.LLMRecommendationRepository;
@@ -14,27 +15,51 @@ import java.util.UUID;
 @Service
 public class LLMRecommendationService {
 
-    @Autowired
-    private LLMRecommendationRepository llmRecommendationRepository;
+    private final LLMRecommendationRepository recommendationRepository;
+    private final TaskRepository taskRepository;
+    private final LLMClient llmClient;
 
     @Autowired
-    private TaskRepository taskRepository;
-
-    // 🔹 Use Case 1: Save a new recommendation for a task
-    public LLMRecommendation saveRecommendation(UUID taskId, String suggestion) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-
-        LLMRecommendation recommendation = new LLMRecommendation();
-        recommendation.setTask(task);
-        recommendation.setSuggestion(suggestion);
-        recommendation.setGeneratedAt(Instant.now());
-
-        return llmRecommendationRepository.save(recommendation);
+    public LLMRecommendationService(
+            LLMRecommendationRepository recommendationRepository,
+            TaskRepository taskRepository,
+            LLMClient llmClient
+    ) {
+        this.recommendationRepository = recommendationRepository;
+        this.taskRepository = taskRepository;
+        this.llmClient = llmClient;
     }
 
-    // 🔹 Use Case 2: Get all LLM suggestions for a task
+    // ✅ Manually save a suggestion
+    public LLMRecommendation saveRecommendation(UUID taskId, String suggestion) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found: " + taskId));
+
+        LLMRecommendation rec = new LLMRecommendation();
+        rec.setTask(task);
+        rec.setSuggestion(suggestion);
+        rec.setGeneratedAt(Instant.now());
+
+        return recommendationRepository.save(rec);
+    }
+
+    // ✅ Fetch all suggestions for a task
     public List<LLMRecommendation> getRecommendationsForTask(UUID taskId) {
-        return llmRecommendationRepository.findByTaskId(taskId);
+        return recommendationRepository.findByTaskId(taskId);
+    }
+
+    // ✅ Auto-generate suggestion using LLM and save it
+    public LLMRecommendation generateAndSaveSuggestion(UUID taskId) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found: " + taskId));
+
+        String suggestion = llmClient.generateSuggestion(task.getTitle(), task.getDescription());
+
+        LLMRecommendation rec = new LLMRecommendation();
+        rec.setTask(task);
+        rec.setSuggestion(suggestion);
+        rec.setGeneratedAt(Instant.now());
+
+        return recommendationRepository.save(rec);
     }
 }

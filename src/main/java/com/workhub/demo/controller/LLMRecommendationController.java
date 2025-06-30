@@ -20,15 +20,21 @@ public class LLMRecommendationController {
         this.llmService = llmService;
     }
 
-    // 🔹 Save LLM suggestion
+    // ✅ Manually save LLM suggestion
     @PostMapping
     public LLMRecommendation addRecommendation(@RequestBody LLMRequest request) {
         return llmService.saveRecommendation(request.getTaskId(), request.getSuggestion());
     }
 
-    // 🔹 Get suggestions for a task
+    // ✅ Get all suggestions for a task
     @GetMapping("/task/{taskId}")
     public List<LLMRecommendation> getRecommendations(@PathVariable UUID taskId) {
         return llmService.getRecommendationsForTask(taskId);
+    }
+
+    // ✅ NEW: Auto-generate suggestion using LLM
+    @PostMapping("/generate/{taskId}")
+    public LLMRecommendation autoGenerateRecommendation(@PathVariable UUID taskId) {
+        return llmService.generateAndSaveSuggestion(taskId);
     }
 }
