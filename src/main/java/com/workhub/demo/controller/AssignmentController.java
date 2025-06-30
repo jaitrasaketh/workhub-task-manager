@@ -1,6 +1,6 @@
 package com.workhub.demo.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.workhub.demo.DTO.AssignRequest;
 import com.workhub.demo.model.Assignment;
 import com.workhub.demo.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,30 +36,5 @@ public class AssignmentController {
     @GetMapping("/user/{userId}")
     public List<Assignment> getAssignmentsByUser(@PathVariable UUID userId) {
         return assignmentService.getAssignmentsByUser(userId);
-    }
-
-    // 🔹 Request DTO
-    public static class AssignRequest {
-        @JsonProperty("taskId")
-        private UUID taskId;
-
-        @JsonProperty("userId")
-        private UUID userId;
-
-        public UUID getTaskId() {
-            return taskId;
-        }
-
-        public void setTaskId(UUID taskId) {
-            this.taskId = taskId;
-        }
-
-        public UUID getUserId() {
-            return userId;
-        }
-
-        public void setUserId(UUID userId) {
-            this.userId = userId;
-        }
     }
 }

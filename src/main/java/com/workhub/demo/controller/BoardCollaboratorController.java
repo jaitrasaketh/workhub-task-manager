@@ -13,10 +13,14 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class BoardCollaboratorController {
 
-    @Autowired
-    private BoardCollaboratorService boardCollaboratorService;
+    private final BoardCollaboratorService boardCollaboratorService;
 
-    // 🔹 1. Add a user as collaborator to a board
+    @Autowired
+    public BoardCollaboratorController(BoardCollaboratorService boardCollaboratorService) {
+        this.boardCollaboratorService = boardCollaboratorService;
+    }
+
+    // ✅ Add a user as a collaborator to a board
     @PostMapping("/boards/{boardId}/collaborators")
     public ResponseEntity<BoardCollaborator> addCollaborator(
             @PathVariable UUID boardId,
@@ -26,7 +30,7 @@ public class BoardCollaboratorController {
         return ResponseEntity.ok(added);
     }
 
-    // 🔹 2. Get all collaborators for a board
+    // ✅ Get all collaborators for a board
     @GetMapping("/boards/{boardId}/collaborators")
     public ResponseEntity<List<BoardCollaborator>> getCollaborators(
             @PathVariable UUID boardId
@@ -35,7 +39,7 @@ public class BoardCollaboratorController {
         return ResponseEntity.ok(collaborators);
     }
 
-    // 🔹 3. Get all boards a user collaborates on
+    // ✅ Get all boards a user collaborates on
     @GetMapping("/users/{userId}/boards")
     public ResponseEntity<List<BoardCollaborator>> getBoardsForUser(
             @PathVariable UUID userId
