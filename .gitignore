@@ -1,10 +1,25 @@
+# Maven/Gradle/Java junk
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-### STS ###
+# Python LLM microservice artifacts
+llm-service/__pycache__/
+llm-service/.env
+llm-service/venv/
+
+# IDE-specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# STS/Eclipse
 .apt_generated
 .classpath
 .factorypath
@@ -13,21 +28,8 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+# VSCode
 .vscode/
+
+# Logs
+*.log
