@@ -5,7 +5,7 @@ from prompt_utils import format_task_prompt
 app = Flask(__name__)
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "llama3"  # You can later pull mistral or phi if needed
+MODEL_NAME = "llama3"  
 
 @app.route('/generate', methods=['POST'])
 def generate():
