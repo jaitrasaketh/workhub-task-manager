@@ -1,6 +1,7 @@
 package com.workhub.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -40,14 +41,15 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "list_id", nullable = false)
-    @JsonIgnore  // <-- Add this
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "board", "tasks"})
     private ListEntity list;
 
-    @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Assignment assignment;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<LLMRecommendation> recommendations = new ArrayList<>();
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<LLMRecommendation> recommendations;
 
 }
